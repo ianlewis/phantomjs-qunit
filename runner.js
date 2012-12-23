@@ -19,7 +19,7 @@ console output.
 
     var url = args[1];
     var output = "console";
-    var verbose = '1';
+    var verbose = true;
     var errorcode = 1;
     if (args.length > 2) {
         output = args[2];
@@ -242,7 +242,7 @@ console output.
             // That does not work when invoked in PhantomJS
             begin = new Date();
             console.log('Tests Started');
-            console.log();
+            console.log('');
         };
 
         plugin.moduleStart = function(context) {
@@ -281,7 +281,7 @@ console output.
         plugin.log = function(details) {
             var runtime = (new Date() - testStart) / 1000;
             if (verbose) {
-                console.log('        ' + (details.failed ? '☓ ' : '✓ ' ) + details.name + ' (' + runtime + 's)'); 
+                console.log('        ' + (details.result ?  '✓ ' : '☓ ') + (details.message || details.name) + ' (' + runtime + 's)'); 
             }
 
             if (details.result) {
