@@ -226,7 +226,7 @@ console output.
         qu.done = qu.tap.done;
 
         return qu;
-    }(function(s) { console.log(s); }));
+    }(function(s) { console.log(s); }, {noPlan: true}));
 
 
     var ConsolePlugin = (function () {

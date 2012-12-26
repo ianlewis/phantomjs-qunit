@@ -3,9 +3,19 @@
 
 module("mymodule");
 
-
-test("MyModule Test", function() {
+test("Equal Test", function() {
     ok(true, "ok() check");
-    equal("Test", "Test", "equals() check");
+    equal("Test", "Test", "equal() check");
     ok(false, "Failed Test");
+    // ok(true, "Passed Test");
+});
+
+test("OK Test", function() {
+    ok(true, "ok() check");
+});
+
+module("othermodule");
+
+test("OK Test", function() {
+    ok(true, "ok() check");
 });

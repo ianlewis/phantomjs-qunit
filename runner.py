@@ -13,7 +13,7 @@ parser = optparse.OptionParser(
     description="Run QUnit tests."
 )
 parser.add_option('--output', metavar='OUT', choices=['console', 'junit', 'tap'],
-                    default='console', help='The test output format.')
+                  default='console', help='The test output format. [console, junit, tap]] (Default: console)')
 parser.add_option('--errorcode', metavar='CODE', type=int, default=0,
                    help='The error code to use when the test fails.')
 parser.add_option('--noglobals', action='store_true', default=False,
