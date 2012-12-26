@@ -21,15 +21,51 @@ console output.
     var output = "console";
     var verbose = true;
     var errorcode = 1;
+    var usecolor = true;
     if (args.length > 2) {
         output = args[2];
         if (args.length > 3) {
             verbose = (args[3] === '1');
             if (args.length > 4) {
                 errorcode = parseInt(args[4], 10);
+                if (args.length > 5) {
+                    usecolor = (args[5] === '1');
+                }
             }
         }
     }
+
+
+    var COLORS = {
+        'pass': 90,
+        'fail': 31,
+        'bright pass': 92,
+        'bright fail': 91,
+        'bright yellow': 93,
+        'pending': 36,
+        'suite': 0,
+        'error title': 0,
+        'error message': 31,
+        'error stack': 90,
+        'checkmark': 32,
+        'fast': 90,
+        'medium': 33,
+        'slow': 31,
+        'green': 32,
+        'light': 90,
+        'diff gutter': 90,
+        'diff added': 42,
+        'diff removed': 41
+    };
+
+    function color(type, str) {
+        if (!usecolor) {
+            return str;
+        }
+        return '\u001b[' + COLORS[type] + 'm' + str + '\u001b[0m';
+    }
+
+
 
     /*
     JUnit XML output for QUnit tests compatible with PhantomJS 1.3
@@ -274,14 +310,14 @@ console output.
             }
             testDetails.total += 1;
             if (!verbose) {
-                console.log('    ' + (details.failed ? '× ' : '✔ ' ) + details.name + ' (' + runtime + 's)'); 
+                console.log('    ' + (details.failed ?  color('fail', '× ') : color('checkmark', '✔ ')) + color(details.failed ? 'fail' : 'pass', details.name + ' (' + runtime + 's)')); 
             }
         };
 
         plugin.log = function(details) {
             var runtime = (new Date() - testStart) / 1000;
             if (verbose) {
-                console.log('        ' + (details.result ?  '✓ ' : '☓ ') + (details.message || details.name) + ' (' + runtime + 's)'); 
+                console.log('        ' + (details.result ?  color('checkmark', '✓ ') : color('fail', '☓ ')) + color(details.result ? 'pass' : 'fail', (details.message || details.name) + ' (' + runtime + 's)')); 
             }
 
             if (details.result) {
@@ -314,11 +350,11 @@ console output.
                 for (i = 0; i < current_test_assertions.length; i += 1) {
                     var err = current_test_assertions[i];
                     console.log('======================================================================');
-                    console.log('FAIL: ' + err.name + '(' + err.module + ')');
+                    console.log('FAIL: ' + color('error title', err.name) + '(' + err.module + ')');
                     console.log('----------------------------------------------------------------------');
-                    console.log(err.message);
+                    console.log(color('error message', err.message));
                     if (err.source) {
-                        console.log(err.source);
+                        console.log(color('error stack', err.source));
                     }
                 }
             }
@@ -327,9 +363,9 @@ console output.
             console.log('Ran ' + details.total + ' tests in ' + (details.runtime / 1000) + ' secs');
             console.log('');
             if (details.failed) {
-                console.log('FAILED (failures=' + details.failed + ')');
+                console.log(color('bright fail', 'FAILED') + ' (failures=' + details.failed + ')');
             } else {
-                console.log('OK');
+                console.log(color('bright pass', 'OK'));
             }
         };
 
@@ -449,10 +485,11 @@ console output.
     });
 
     page.onError = function(msg, trace) {
-        console.error(msg);
+        console.error(color('error message', msg));
         trace.forEach(function(item) {
-            console.error('  ', item.file, ':', item.line);
+            console.error(color('error stack', '  ' + item.file + ':' + item.line));
         });
+        console.error('');
         phantom.exit(1);
     };
 }());

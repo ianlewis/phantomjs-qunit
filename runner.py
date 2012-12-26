@@ -22,6 +22,8 @@ parser.add_option('--notrycatch', action='store_true', default=False,
                     help='Invoke QUnit with the notrycatch setting.')
 parser.add_option('--abbrev', action='store_true', default=False,
                     help='Abbreviated console output.')
+parser.add_option('--nocolors', action='store_true', default=False,
+                    help="Don't use colors in console output.")
 
 def main():
     (options, args) = parser.parse_args()
@@ -49,12 +51,13 @@ def main():
             'args': "?%s" % "&".join(("=".join((urllib.quote(k), urllib.quote(v))) for k,v in url_params.items())),
         }
 
-    command = r"""phantomjs %(basepath)s/runner.js "%(url)s" %(output)s %(verbosity)s %(errorcode)s""" % {
+    command = r"""phantomjs %(basepath)s/runner.js "%(url)s" %(output)s %(verbosity)s %(errorcode)s %(usecolor)s""" % {
         'basepath': BASE_PATH,
         'url': url,
         'output': options.output,
         'verbosity': '0' if options.abbrev else '1',
         'errorcode': options.errorcode,
+        'usecolor': '1' if not options.nocolors and sys.stdout.isatty() else '0',
     }
 
     sys.exit(os.system(command))
