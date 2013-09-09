@@ -457,7 +457,7 @@ console output.
                     }
 
                     if (msgs[1] === 'done') {
-                        result = message.data;
+                        result = message.details;
                         failed = !result || result.failed;
 
                         phantom.exit(failed ? errorcode : 0);
