@@ -51,7 +51,7 @@ def main():
             'args': "?%s" % "&".join(("=".join((urllib.quote(k), urllib.quote(v))) for k,v in url_params.items())),
         }
 
-    command = r"""phantomjs %(basepath)s/runner.js "%(url)s" %(output)s %(verbosity)s %(errorcode)s %(usecolor)s""" % {
+    command = r"""phantomjs --web-security=false %(basepath)s/runner.js "%(url)s" %(output)s %(verbosity)s %(errorcode)s %(usecolor)s""" % {
         'basepath': BASE_PATH,
         'url': url,
         'output': options.output,
@@ -60,7 +60,8 @@ def main():
         'usecolor': '1' if not options.nocolors and sys.stdout.isatty() else '0',
     }
 
-    sys.exit(os.system(command))
+    success = os.system(command) == 0
+    sys.exit(0 if success else 1)
 
 if __name__ == '__main__':
     main()
