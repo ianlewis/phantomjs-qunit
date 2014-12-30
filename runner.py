@@ -51,7 +51,7 @@ def main():
             'args': "?%s" % "&".join(("=".join((urllib.quote(k), urllib.quote(v))) for k,v in url_params.items())),
         }
 
-    command = r"""phantomjs %(basepath)s/runner.js "%(url)s" %(output)s %(verbosity)s %(errorcode)s %(usecolor)s""" % {
+    command = r"""phantomjs --web-security=false %(basepath)s/runner.js "%(url)s" %(output)s %(verbosity)s %(errorcode)s %(usecolor)s""" % {
         'basepath': BASE_PATH,
         'url': url,
         'output': options.output,
